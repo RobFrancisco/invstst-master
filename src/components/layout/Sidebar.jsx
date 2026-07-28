@@ -39,7 +39,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         {!collapsed && (
         <div className="flex flex-col">
           <span className="font-semibold text-sidebar-accent-foreground text-sm tracking-tight whitespace-nowrap">
-            GPP Power Gadgetshop
+            GPP Gadgetshop
           </span>
         </div>
         )}
