@@ -1,0 +1,96 @@
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import {
+  LayoutDashboard, Package, ShoppingCart, PlusCircle, Settings, LogOut,
+  ChevronLeft, ChevronRight, BarChart3, Boxes, TrendingDown, Bell
+} from 'lucide-react';
+import { dataClient } from '@/lib/data-client';
+import { cn } from '@/lib/utils';
+
+const navItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: Package, label: 'Inventory', path: '/inventory' },
+  { icon: ShoppingCart, label: 'Sales', path: '/sales' },
+  { icon: TrendingDown, label: 'Stock Movements', path: '/stock-movements' },
+  { icon: Bell, label: 'Reorder Alerts', path: '/reorder-alerts' },
+  { icon: PlusCircle, label: 'Add Product', path: '/add-product' },
+  { icon: Boxes, label: 'Manage Products', path: '/manage-products' },
+  { icon: BarChart3, label: 'Reports', path: '/reports' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
+];
+
+export default function Sidebar({ collapsed, setCollapsed }) {
+  const router = useRouter();
+  const currentPath = router.asPath.split('?')[0].toLowerCase();
+
+  return (
+    <aside
+      className={cn(
+        "fixed left-0 top-0 h-screen bg-sidebar text-sidebar-foreground z-40 flex flex-col transition-all duration-300 ease-in-out border-r border-sidebar-border",
+        collapsed ? "w-[72px]" : "w-[260px]"
+      )}
+    >
+      {/* Logo */}
+      <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border shrink-0">
+        <div className="mx-auto flex max-w-sm rounded-lg bg-sidebar-primary flex items-center justify-center shrink-0">
+          <img src="/gpp.png" alt="gpp logo" className="w-13 h-14  object-contain" />
+        </div>
+        {!collapsed && (
+        <div className="flex flex-col">
+          <span className="font-semibold text-sidebar-accent-foreground text-sm tracking-tight whitespace-nowrap">
+            GPP Power Gadgetshop
+          </span>
+        </div>
+        )}
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+        {navItems.map((item) => {
+          const isActive = currentPath === item.path.toLowerCase();
+          return (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                isActive
+                  ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/20'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+              )}
+            >
+              <item.icon className="w-[18px] h-[18px] shrink-0" />
+              {!collapsed && <span className="truncate">{item.label}</span>}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Footer */}
+      <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
+        <button
+          onClick={() => dataClient.auth.logout()}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+        >
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
+          {!collapsed && <span>Logout</span>}
+        </button>
+
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all duration-200"
+        >
+          {collapsed ? (
+            <ChevronRight className="w-[18px] h-[18px] shrink-0" />
+          ) : (
+            <>
+              <ChevronLeft className="w-[18px] h-[18px] shrink-0" />
+              <span>Collapse</span>
+            </>
+          )}
+        </button>
+      </div>
+    </aside>
+  );
+}

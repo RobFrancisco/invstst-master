@@ -1,0 +1,59 @@
+{
+  "name": "StockMovement",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "description": "Product ID"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "product_category": {
+      "type": "string",
+      "description": "Product category"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "sale",
+        "restock",
+        "adjustment",
+        "return"
+      ],
+      "description": "Movement type"
+    },
+    "quantity_change": {
+      "type": "number",
+      "description": "Positive = stock in, Negative = stock out"
+    },
+    "quantity_before": {
+      "type": "number",
+      "description": "Stock before change"
+    },
+    "quantity_after": {
+      "type": "number",
+      "description": "Stock after change"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Reference number (e.g. INV-2024-001)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    },
+    "movement_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date of movement"
+    }
+  },
+  "required": [
+    "product_id",
+    "product_name",
+    "type",
+    "quantity_change"
+  ]
+}

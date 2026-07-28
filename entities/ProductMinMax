@@ -1,0 +1,23 @@
+{
+  "name": "ProductMinMax",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "description": "Product ID"
+    },
+    "min_stock": {
+      "type": "number",
+      "description": "Minimum stock level"
+    },
+    "max_stock": {
+      "type": "number",
+      "description": "Maximum stock level"
+    }
+  },
+  "required": [
+    "product_id",
+    "min_stock",
+    "max_stock"
+  ]
+}

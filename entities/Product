@@ -1,0 +1,77 @@
+{
+  "name": "ReorderAlert",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "description": "Product ID"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "product_category": {
+      "type": "string",
+      "description": "Product category"
+    },
+    "current_stock": {
+      "type": "number",
+      "description": "Current stock quantity"
+    },
+    "min_stock": {
+      "type": "number",
+      "description": "Minimum stock level (Min)"
+    },
+    "max_stock": {
+      "type": "number",
+      "description": "Maximum stock level (Max)"
+    },
+    "reorder_qty": {
+      "type": "number",
+      "description": "Suggested reorder quantity (Max - Current)"
+    },
+    "unit_cost": {
+      "type": "number",
+      "description": "Cost per unit"
+    },
+    "estimated_cost": {
+      "type": "number",
+      "description": "Estimated reorder cost"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "description": "Reorder priority"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Ordered",
+        "Received",
+        "Dismissed"
+      ],
+      "default": "Pending",
+      "description": "Alert status"
+    },
+    "alert_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date alert was created"
+    }
+  },
+  "required": [
+    "product_id",
+    "product_name",
+    "current_stock",
+    "min_stock",
+    "max_stock",
+    "reorder_qty",
+    "status"
+  ]
+}
