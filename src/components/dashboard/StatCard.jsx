@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export default function StatCard({ title, value, icon: Icon, trend, trendLabel, color = 'primary' }) {
+export default function StatCard({ title, value, icon: Icon, trend, trendLabel, color = 'primary', onClick, iconAriaLabel }) {
   const colorMap = {
     primary: 'bg-blue-500/10 text-blue-600',
     success: 'bg-emerald-500/10 text-emerald-600',
@@ -10,8 +10,25 @@ export default function StatCard({ title, value, icon: Icon, trend, trendLabel, 
     purple: 'bg-purple-500/10 text-purple-600',
   };
 
+  const handleKeyDown = (event) => {
+    if (!onClick) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <div className="bg-card rounded-2xl border border-border p-5 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+    <div
+      className={cn(
+        'bg-card rounded-2xl border border-border p-5 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300',
+        onClick && 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
+      )}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+    >
       <div className="flex items-start justify-between">
         <div className="space-y-3">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>

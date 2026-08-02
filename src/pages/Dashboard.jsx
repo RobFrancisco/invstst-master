@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { Package, ShoppingCart, AlertTriangle, TrendingUp, DollarSign, Boxes } from 'lucide-react';
 import { formatCurrency } from '@/lib/stockUtils';
 import StatCard from '@/components/dashboard/StatCard';
@@ -20,10 +21,12 @@ export default function Dashboard() {
     queryFn: () => dataClient.entities.Sale.list('-created_date', 100),
   });
 
+  const router = useRouter();
   const totalStock = products.reduce((sum, item) => sum + (item.quantity || 0), 0);
   const totalRevenue = sales.reduce((sum, sale) => sum + (sale.total || 0), 0);
   const totalProfit = sales.reduce((sum, sale) => sum + (sale.profit || 0), 0);
   const lowStock = products.filter((item) => item.quantity > 0 && item.quantity < 5).length;
+  const outOfStock = products.filter((item) => item.quantity <= 0).length;
   const overstock = products.filter((item) => item.quantity > 50).length;
 
   return (
@@ -38,8 +41,30 @@ export default function Dashboard() {
         <StatCard title="Total Sales" value={sales.length} icon={ShoppingCart} color="success" />
         <StatCard title="Revenue" value={formatCurrency(totalRevenue)} icon={DollarSign} color="purple" />
         <StatCard title="Total Stock" value={totalStock.toLocaleString()} icon={Boxes} color="primary" />
-        <StatCard title="Low Stock" value={lowStock} icon={AlertTriangle} color="danger" />
-        <StatCard title="Overstock" value={overstock} icon={TrendingUp} color="warning" />
+        <StatCard
+          title="Low Stock"
+          value={lowStock}
+          icon={AlertTriangle}
+          color="danger"
+          onClick={() => router.push({ pathname: '/inventory', query: { status: 'below_min' } })}
+          iconAriaLabel="View low stock items"
+        />
+        <StatCard
+          title="Out of Stock"
+          value={outOfStock}
+          icon={AlertTriangle}
+          color="danger"
+          onClick={() => router.push({ pathname: '/inventory', query: { status: 'out' } })}
+          iconAriaLabel="View out of stock items"
+        />
+        <StatCard
+          title="Overstock"
+          value={overstock}
+          icon={TrendingUp}
+          color="warning"
+          onClick={() => router.push({ pathname: '/inventory', query: { status: 'overstock' } })}
+          iconAriaLabel="View overstock items"
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

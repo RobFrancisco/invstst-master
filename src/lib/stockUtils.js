@@ -34,11 +34,13 @@ export function formatDate(date) {
   }).format(new Date(date));
 }
 
-export const CATEGORIES = ['iPhone', 'iPad', 'MacBook', 'Apple Watch', 'AirPods', 'Accessories', 'Other'];
+export const CATEGORIES = ['iPhone', 'Android', 'iPad', 'Tablet', 'MacBook', 'Apple Watch', 'AirPods', 'Accessories', 'Other'];
 
 export const CATEGORY_ICONS = {
   iPhone: '📱',
+  Android: '🤖',
   iPad: '📲',
+  Tablet: '🧩',
   MacBook: '💻',
   'Apple Watch': '⌚',
   AirPods: '🎧',
