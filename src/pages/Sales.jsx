@@ -1,6 +1,6 @@
 ﻿import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { PlusCircle, Search, Download, ShoppingCart } from 'lucide-react';
+import { PlusCircle, Search, Download, ShoppingCart, Currency } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatCurrency, formatDate } from '@/lib/stockUtils';
 import NewSaleModal from '@/components/sales/NewSalesModal';
 import StatCard from '@/components/dashboard/StatCard';
-import { DollarSign, TrendingUp, BarChart3 } from 'lucide-react';
+import { TrendingUp, BarChart3 } from 'lucide-react';
 import { startOfDay, subDays, startOfWeek, startOfMonth } from 'date-fns';
 import { dataClient } from '@/lib/data-client';
 
@@ -98,7 +98,7 @@ export default function Sales() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard title="Revenue" value={formatCurrency(totalRevenue)} icon={DollarSign} color="primary" />
+        <StatCard title="Revenue" value={formatCurrency(totalRevenue)} icon={Currency} color="primary" />
         <StatCard title="Profit" value={formatCurrency(totalProfit)} icon={TrendingUp} color="success" />
         <StatCard title="Avg. Order" value={formatCurrency(avgOrder)} icon={BarChart3} color="purple" />
       </div>

@@ -1,6 +1,11 @@
 ﻿import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+<<<<<<< Updated upstream
 import { Package, ShoppingCart, AlertTriangle, TrendingUp, DollarSign, Boxes } from 'lucide-react';
+=======
+import { useRouter } from 'next/router';
+import { Package, ShoppingCart, AlertTriangle, TrendingUp, Currency, Boxes } from 'lucide-react';
+>>>>>>> Stashed changes
 import { formatCurrency } from '@/lib/stockUtils';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentSales from '@/components/dashboard/RecentSales';
@@ -36,7 +41,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <StatCard title="Products" value={products.length} icon={Package} color="primary" />
         <StatCard title="Total Sales" value={sales.length} icon={ShoppingCart} color="success" />
-        <StatCard title="Revenue" value={formatCurrency(totalRevenue)} icon={DollarSign} color="purple" />
+        <StatCard title="Revenue" value={formatCurrency(totalRevenue)} color="purple" />
         <StatCard title="Total Stock" value={totalStock.toLocaleString()} icon={Boxes} color="primary" />
         <StatCard title="Low Stock" value={lowStock} icon={AlertTriangle} color="danger" />
         <StatCard title="Overstock" value={overstock} icon={TrendingUp} color="warning" />

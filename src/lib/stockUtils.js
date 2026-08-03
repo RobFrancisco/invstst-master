@@ -21,6 +21,7 @@ export function formatCurrency(amount) {
   return new Intl.NumberFormat('en-PH', {
     style: 'currency',
     currency: 'PHP',
+    currencyDisplay: 'narrowSymbol',
   }).format(amount || 0);
 }
 
