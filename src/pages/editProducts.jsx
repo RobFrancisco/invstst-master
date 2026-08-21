@@ -117,7 +117,7 @@ export default function AddProduct() {
     queryClient.invalidateQueries({ queryKey: ['products'] });
     queryClient.invalidateQueries({ queryKey: ['product-min-max'] });
     setSaving(false);
-    router.push('/inventory');
+    router.push('/Inventory');
   };
 
   return (

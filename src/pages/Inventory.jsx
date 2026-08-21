@@ -101,7 +101,7 @@ export default function Inventory() {
           <h1 className="text-2xl font-bold text-foreground">Inventory</h1>
           <p className="text-sm text-muted-foreground mt-1">{filtered.length} products tracked</p>
         </div>
-        <Button className="rounded-xl gap-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => router.push('/add-product')}>
+        <Button className="rounded-xl gap-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => router.push('/addProducts')}>
           <Plus className="w-4 h-4" /> Add Product
         </Button>
       </div>
@@ -204,7 +204,7 @@ export default function Inventory() {
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
-                          onClick={() => router.push(`/add-product?edit=${product.id}`)}
+                          onClick={() => router.push(`/EditProducts?edit=${product.id}`)}
                           className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <Pencil className="w-4 h-4" />

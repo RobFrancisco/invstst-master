@@ -11,13 +11,13 @@ import { cn } from '@/lib/utils';
 const baseNavItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Package, label: 'Inventory', path: '/inventory' },
-  { icon: ShoppingCart, label: 'Sales', path: '/sales' },
+  { icon: ShoppingCart, label: 'Sales', path: '/Sales' },
   { icon: TrendingDown, label: 'Stock Movements', path: '/stock-movements' },
   { icon: Bell, label: 'Reorder Alerts', path: '/reorder-alerts' },
-  { icon: PlusCircle, label: 'Add Product', path: '/add-product' },
+  { icon: PlusCircle, label: 'Add Product', path: '/addProducts' },
   { icon: Boxes, label: 'Manage Products', path: '/manage-products' },
-  { icon: BarChart3, label: 'Reports', path: '/reports' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: BarChart3, label: 'Reports', path: '/Reports' },
+  { icon: Settings, label: 'Settings', path: '/Settings' },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
