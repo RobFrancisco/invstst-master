@@ -1,11 +1,7 @@
 ﻿import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-<<<<<<< Updated upstream
-import { Package, ShoppingCart, AlertTriangle, TrendingUp, DollarSign, Boxes } from 'lucide-react';
-=======
 import { useRouter } from 'next/router';
 import { Package, ShoppingCart, AlertTriangle, TrendingUp, Currency, Boxes } from 'lucide-react';
->>>>>>> Stashed changes
 import { formatCurrency } from '@/lib/stockUtils';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentSales from '@/components/dashboard/RecentSales';
