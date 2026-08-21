@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   LayoutDashboard, Package, ShoppingCart, PlusCircle, Settings, LogOut,
-  ChevronLeft, ChevronRight, BarChart3, Boxes, TrendingDown, Bell
+  ChevronLeft, ChevronRight, BarChart3, Boxes, TrendingDown, Bell, UserCog
 } from 'lucide-react';
 import { dataClient } from '@/lib/data-client';
 import { cn } from '@/lib/utils';
 
-const navItems = [
+const baseNavItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Package, label: 'Inventory', path: '/inventory' },
   { icon: ShoppingCart, label: 'Sales', path: '/sales' },
@@ -23,29 +23,47 @@ const navItems = [
 export default function Sidebar({ collapsed, setCollapsed }) {
   const router = useRouter();
   const currentPath = router.asPath.split('?')[0].toLowerCase();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    dataClient.auth.me().then((user) => {
+      if (active) setCurrentUser(user);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const navItems = [
+    ...baseNavItems,
+    ...(currentUser?.role === 'admin' ? [{ icon: UserCog, label: 'User Management', path: '/user-management' }] : []),
+  ];
 
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-screen bg-sidebar text-sidebar-foreground z-40 flex flex-col transition-all duration-300 ease-in-out border-r border-sidebar-border",
-        collapsed ? "w-[72px]" : "w-[260px]"
+        'fixed left-0 top-0 h-screen bg-sidebar text-sidebar-foreground z-40 flex flex-col transition-all duration-300 ease-in-out border-r border-sidebar-border',
+        collapsed ? 'w-[72px]' : 'w-[260px]'
       )}
     >
-      {/* Logo */}
-      <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border shrink-0">
-        <div className="mx-auto flex max-w-sm rounded-lg bg-sidebar-primary flex items-center justify-center shrink-0">
-          <img src="/gpp.png" alt="gpp logo" className="w-13 h-14  object-contain" />
+      <div className={cn(
+        'h-16 flex items-center border-b border-sidebar-border shrink-0',
+        collapsed ? 'justify-center px-0' : 'gap-3 px-5'
+      )}>
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sidebar-primary shrink-0">
+          <img src="/gpp.png" alt="gpp logo" className="w-full h-full object-contain" />
         </div>
         {!collapsed && (
-        <div className="flex flex-col">
-          <span className="font-semibold text-sidebar-accent-foreground text-sm tracking-tight whitespace-nowrap">
-            GPP Power Gadgetshop
-          </span>
-        </div>
+          <div className="flex flex-col">
+            <span className="font-semibold text-sidebar-accent-foreground text-sm tracking-tight whitespace-nowrap">
+              GPP Power Gadgetshop
+            </span>
+          </div>
         )}
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = currentPath === item.path.toLowerCase();
@@ -67,7 +85,6 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         })}
       </nav>
 
-      {/* Footer */}
       <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
         <button
           onClick={() => dataClient.auth.logout()}

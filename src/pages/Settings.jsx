@@ -12,7 +12,14 @@ export default function Settings() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    setUser({ full_name: 'Admin User', email: 'admin@example.com', role: 'Administrator' });
+    let active = true;
+    dataClient.auth.me().then((currentUser) => {
+      if (active) setUser(currentUser);
+    });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const { data: products = [] } = useQuery({
@@ -22,6 +29,11 @@ export default function Settings() {
 
   const lowStockProducts = products.filter((product) => product.quantity > 0 && product.quantity < 5);
   const outOfStockProducts = products.filter((product) => product.quantity <= 0);
+
+  const handleSignOut = () => {
+    dataClient.auth.logout();
+    toast({ title: 'Signed out', description: 'You are now signed out.' });
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -96,7 +108,7 @@ export default function Settings() {
           </div>
           <h2 className="text-base font-semibold">Account</h2>
         </div>
-        <Button variant="outline" className="rounded-xl" onClick={() => toast({ title: 'Signed out', description: 'You are now signed out.' })}>
+        <Button variant="outline" className="rounded-xl" onClick={handleSignOut}>
           Sign Out
         </Button>
       </div>

@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function NewSalesModal({ open, onClose, products = [] }) {
   const queryClient = useQueryClient();
@@ -15,22 +14,46 @@ export default function NewSalesModal({ open, onClose, products = [] }) {
   const [quantity, setQuantity] = useState(1);
   const [customer, setCustomer] = useState('');
   const [unitPrice, setUnitPrice] = useState(products[0]?.price || 0);
+  const [staffName, setStaffName] = useState('Store Staff');
   const [saving, setSaving] = useState(false);
+  const [searchProduct, setSearchProduct] = useState(products[0]?.name || '');
+  const [showProductSuggestions, setShowProductSuggestions] = useState(false);
 
   useEffect(() => {
     if (products.length && !productId) {
       setProductId(products[0].id);
+      setSearchProduct(products[0].name || '');
     }
   }, [products, productId]);
+
+  useEffect(() => {
+    dataClient.auth.me().then((user) => {
+      if (user?.full_name) {
+        setStaffName(user.full_name);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const selectedProduct = products.find((product) => product.id === productId);
     if (selectedProduct) {
       setUnitPrice(selectedProduct.price || 0);
+      setSearchProduct(selectedProduct.name || '');
     }
   }, [productId, products]);
 
   const selectedProduct = products.find((product) => product.id === productId);
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchProduct.trim().toLowerCase())
+  );
+
+  const handleProductSelection = (product) => {
+    setProductId(product.id);
+    setUnitPrice(product.price || 0);
+    setSearchProduct(product.name || '');
+    setShowProductSuggestions(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,9 +71,11 @@ export default function NewSalesModal({ open, onClose, products = [] }) {
         quantity,
         unit_price: unitPrice,
         customer_name: customer,
+        staff_name: staffName,
       });
       queryClient.invalidateQueries({ queryKey: ['sales'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['stock-movements'] });
       toast({ title: 'Sale recorded', description: 'The sale has been successfully logged.' });
       onClose();
     } catch (error) {
@@ -71,16 +96,38 @@ export default function NewSalesModal({ open, onClose, products = [] }) {
         <form onSubmit={handleSubmit} className="grid gap-5">
           <div className="grid gap-3">
             <Label>Product</Label>
-            <Select value={productId} onValueChange={setProductId}>
-              <SelectTrigger className="w-full"><SelectValue placeholder="Select a product" /></SelectTrigger>
-              <SelectContent>
-                {products.map((product) => (
-                  <SelectItem key={product.id} value={product.id}>
-                    {product.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <Input
+                type="text"
+                value={searchProduct}
+                onFocus={() => setShowProductSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowProductSuggestions(false), 150)}
+                onChange={(event) => {
+                  setSearchProduct(event.target.value);
+                  setShowProductSuggestions(true);
+                }}
+                placeholder="Search product..."
+                className="w-full rounded-xl"
+              />
+              {showProductSuggestions && searchProduct && filteredProducts.length > 0 && (
+                <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl border border-border bg-white shadow-lg">
+                  {filteredProducts.map((product) => (
+                    <button
+                      type="button"
+                      key={product.id}
+                      onMouseDown={(event) => {
+                        event.preventDefault();
+                        handleProductSelection(product);
+                      }}
+                      className="flex w-full items-center justify-between px-4 py-3 text-left text-sm text-foreground hover:bg-muted"
+                    >
+                      <span>{product.name}</span>
+                      <span className="text-xs text-muted-foreground">{product.category}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

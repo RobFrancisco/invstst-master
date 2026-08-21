@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { Plus, Search, AlertTriangle, Pencil, Trash2 } from 'lucide-react';
@@ -34,6 +34,14 @@ export default function Inventory() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const status = router.query.status;
+    if (status === 'below_min' || status === 'ok' || status === 'out' || status === 'overstock' || status === 'all') {
+      setStatusFilter(status);
+    }
+  }, [router.isReady, router.query.status]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const minMaxMap = useMinMaxMap();
@@ -73,11 +81,13 @@ export default function Inventory() {
     if (statusFilter !== 'all') {
       result = result.filter((product) => {
         const mm = minMaxMap[product.id];
-        const min = mm?.min_stock ?? 5;
+        const min = product.min_stock ?? mm?.min_stock ?? 5;
+        const max = product.max_stock ?? mm?.max_stock ?? 50;
         const qty = product.quantity || 0;
-        if (statusFilter === 'below_min') return qty < min;
-        if (statusFilter === 'ok') return qty >= min;
+        if (statusFilter === 'below_min') return qty < min && qty > 0;
+        if (statusFilter === 'ok') return qty >= min && qty <= max;
         if (statusFilter === 'out') return qty <= 0;
+        if (statusFilter === 'overstock') return qty > max;
         return true;
       });
     }
@@ -125,6 +135,7 @@ export default function Inventory() {
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="below_min">Below Min</SelectItem>
             <SelectItem value="ok">In Stock</SelectItem>
+            <SelectItem value="overstock">Overstock</SelectItem>
             <SelectItem value="out">Out of Stock</SelectItem>
           </SelectContent>
         </Select>
@@ -151,11 +162,12 @@ export default function Inventory() {
             <tbody className="divide-y divide-border">
               {filtered.map((product) => {
                 const mm = minMaxMap[product.id];
-                const min = mm?.min_stock ?? 5;
-                const max = mm?.max_stock ?? 50;
+                const min = product.min_stock ?? mm?.min_stock ?? 5;
+                const max = product.max_stock ?? mm?.max_stock ?? 50;
                 const qty = product.quantity || 0;
                 const isBelowMin = qty < min && qty > 0;
                 const isOut = qty <= 0;
+                const isOverstock = qty > max;
 
                 return (
                   <tr key={product.id} className="hover:bg-accent/40 transition-colors">
@@ -182,9 +194,10 @@ export default function Inventory() {
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                         isOut ? 'bg-red-100 text-red-700' :
                         isBelowMin ? 'bg-amber-100 text-amber-700' :
+                        isOverstock ? 'bg-blue-100 text-blue-700' :
                         'bg-emerald-100 text-emerald-700'
                       }`}>
-                        {isOut ? 'Out of Stock' : isBelowMin ? 'Below Min' : 'Active'}
+                        {isOut ? 'Out of Stock' : isBelowMin ? 'Below Min' : isOverstock ? 'Overstock' : 'Active'}
                       </span>
                     </td>
                     <td className="px-4 py-4">

@@ -93,6 +93,7 @@ export default function StockMovements() {
                     <p className="font-semibold text-foreground text-sm">{movement.product_name}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {cfg.label}{movement.reference ? ` • ${movement.reference}` : ''}
+                      {movement.staff_name ? ` • Sold by ${movement.staff_name}` : ''}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
