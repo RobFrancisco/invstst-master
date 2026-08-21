@@ -40,6 +40,7 @@
     "date-fns": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^1.17.0",
+    "mysql2": "^3.23.2",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",

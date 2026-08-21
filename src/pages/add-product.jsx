@@ -21,6 +21,8 @@ const emptyForm = {
   price: '',
   cost: '',
   quantity: '',
+  min_stock: '5',
+  max_stock: '50',
   description: '',
   image_url: '',
 };
@@ -57,6 +59,8 @@ export default function AddProduct() {
         price: existingProduct.price?.toString() || '',
         cost: existingProduct.cost?.toString() || '',
         quantity: existingProduct.quantity?.toString() || '',
+        min_stock: existingProduct.min_stock?.toString() || '5',
+        max_stock: existingProduct.max_stock?.toString() || '50',
         description: existingProduct.description || '',
         image_url: existingProduct.image_url || '',
       });
@@ -84,6 +88,13 @@ export default function AddProduct() {
       return;
     }
 
+    const minStock = parseInt(form.min_stock, 10) || 5;
+    const maxStock = parseInt(form.max_stock, 10) || 50;
+    if (maxStock < minStock) {
+      toast({ title: 'Error', description: 'Maximum stock cannot be lower than minimum stock', variant: 'destructive' });
+      return;
+    }
+
     setSaving(true);
 
     const payload = {
@@ -91,6 +102,8 @@ export default function AddProduct() {
       price: parseFloat(form.price) || 0,
       cost: parseFloat(form.cost) || 0,
       quantity: parseInt(form.quantity) || 0,
+      min_stock: minStock,
+      max_stock: maxStock,
     };
 
     if (editId) {
@@ -102,6 +115,7 @@ export default function AddProduct() {
     }
 
     queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: ['product-min-max'] });
     setSaving(false);
     router.push('/inventory');
   };
@@ -193,6 +207,14 @@ export default function AddProduct() {
           <div className="space-y-2">
             <Label>Quantity</Label>
             <Input type="number" value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} placeholder="25" className="rounded-xl" />
+          </div>
+          <div className="space-y-2">
+            <Label>Minimum Stock</Label>
+            <Input type="number" min="0" value={form.min_stock} onChange={(e) => handleChange('min_stock', e.target.value)} placeholder="5" className="rounded-xl" />
+          </div>
+          <div className="space-y-2">
+            <Label>Maximum Stock</Label>
+            <Input type="number" min="0" value={form.max_stock} onChange={(e) => handleChange('max_stock', e.target.value)} placeholder="50" className="rounded-xl" />
           </div>
         </div>
 
