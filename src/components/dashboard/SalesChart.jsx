@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, subDays, startOfDay } from 'date-fns';
+import { formatCurrency } from '@/lib/stockUtils';
 
 export default function SalesChart({ sales }) {
   const chartData = useMemo(() => {
@@ -38,7 +39,7 @@ export default function SalesChart({ sales }) {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" />
             <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} tickLine={false} axisLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
+            <YAxis tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} tickLine={false} axisLine={false} tickFormatter={(v) => formatCurrency(v)} />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(0, 0%, 100%)',
@@ -47,7 +48,7 @@ export default function SalesChart({ sales }) {
                 fontSize: '12px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
               }}
-              formatter={(value) => [`$${value.toFixed(2)}`, 'Revenue']}
+              formatter={(value) => [formatCurrency(value), 'Revenue']}
             />
             <Area type="monotone" dataKey="revenue" stroke="hsl(221, 83%, 53%)" strokeWidth={2} fill="url(#revenueGradient)" />
           </AreaChart>

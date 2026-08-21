@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { formatCurrency, CATEGORIES, CATEGORY_ICONS } from '@/lib/stockUtils';
 import StatCard from '@/components/dashboard/StatCard';
-import { DollarSign, TrendingUp, Package, ShoppingCart } from 'lucide-react';
+import { Currency, TrendingUp, Package, ShoppingCart } from 'lucide-react';
 import { dataClient } from '@/lib/data-client';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'];
@@ -55,7 +55,7 @@ export default function Reports() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Revenue" value={formatCurrency(totalRevenue)} icon={DollarSign} color="primary" />
+        <StatCard title="Total Revenue" value={formatCurrency(totalRevenue)} icon={Currency} color="primary" />
         <StatCard title="Total Profit" value={formatCurrency(totalProfit)} icon={TrendingUp} color="success" />
         <StatCard title="Profit Margin" value={`${margin}%`} icon={ShoppingCart} color="purple" />
         <StatCard title="Inventory Value" value={formatCurrency(inventoryValue)} icon={Package} color="warning" />
@@ -72,7 +72,7 @@ export default function Reports() {
                 <BarChart data={categorySales}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} tickFormatter={(value) => `$${value}`} />
+                  <YAxis tick={{ fontSize: 11, fill: 'hsl(220, 10%, 46%)' }} tickFormatter={(value) => formatCurrency(value)} />
                   <Tooltip formatter={(value) => formatCurrency(value)} />
                   <Bar dataKey="revenue" fill="hsl(221, 83%, 53%)" radius={[6, 6, 0, 0]} />
                 </BarChart>

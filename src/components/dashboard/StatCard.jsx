@@ -45,9 +45,11 @@ export default function StatCard({ title, value, icon: Icon, trend, trendLabel, 
             </div>
           )}
         </div>
-        <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center", colorMap[color])}>
-          <Icon className="w-5 h-5" />
-        </div>
+        {Icon ? (
+          <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center", colorMap[color])}>
+            <Icon className="w-5 h-5" />
+          </div>
+        ) : null}
       </div>
     </div>
   );
